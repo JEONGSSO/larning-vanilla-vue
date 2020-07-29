@@ -1,6 +1,6 @@
 body, ul {
   margin: 0;
-  padding: 0;
+  padding: 0 10px;
 }
 ul {
   list-style: none;
@@ -26,7 +26,7 @@ input[type=text] {
   font-size: 14px;
   line-height: 1.5;
   border: 1px solid #cccccc;
- 
+
 }
 .content {
   border: 1px solid #ccc;
@@ -40,7 +40,7 @@ ul.tabs {
   padding: 15px;
   text-align: center;
   box-sizing: border-box;
-  border-bottom: 1px solid #ccc; 
+  border-bottom: 1px solid #ccc;
   background-color: #eee;
   color: #999;
 }
@@ -52,7 +52,7 @@ ul.tabs {
   box-sizing: border-box;
   display: block;
   padding: 15px;
-  border-bottom: 1px solid #ccc; 
+  border-bottom: 1px solid #ccc;
   position: relative;
 }
 .list li:last-child {
@@ -92,16 +92,12 @@ form {
   top: 12px;
   right: 10px;
 }
-.btn-reset::before, 
+.btn-reset::before,
 .btn-remove::before {
   content: 'X'
 }
 
-#search-result li {
-  display: flex;
-  margin-bottom: 15px;
-}
-#search-result img {
+.search-list img {
   width: 30%;
   height: 30%;
 }
