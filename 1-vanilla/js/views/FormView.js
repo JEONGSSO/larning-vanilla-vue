@@ -39,3 +39,5 @@ FormView.clickReset = function () {
 };
 
 export default FormView;
+
+//todo 각 탭을 클릭하면 탭 아래 내용이 변경된다
