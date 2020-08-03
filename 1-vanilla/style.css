@@ -43,6 +43,7 @@ ul.tabs {
   border-bottom: 1px solid #ccc;
   background-color: #eee;
   color: #999;
+  cursor: pointer;
 }
 .tabs li.active {
   background-color: #2ac1bc;

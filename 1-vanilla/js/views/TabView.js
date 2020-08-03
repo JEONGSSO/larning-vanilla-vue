@@ -12,15 +12,18 @@ TabView.setup = function (el) {
 };
 
 TabView.eventBinder = function () {
-    Array.from(this.removeBtnEl).forEach( e =>
-        console.log(e)
+    Array.from(this.removeBtnEl).forEach(e =>
+        e.addEventListener('click', e => this.removeItem(e))
     )
-    // this.removeBtn.addEventListener('click', e => this.removeItem(e))
+    Array.from(this.el.querySelectorAll('li')).forEach(li =>
+        li.addEventListener('click', e => this.setActiveTab(e.target.innerHTML))
+    );
 };
 
 TabView.setActiveTab = function (tabName) {
+    this.activeTab = tabName;
     Array.from(this.el.querySelectorAll('li')).forEach(li =>
-        li.className === tabName ? 'active' : ''
+        li.className = li.innerHTML === tabName ? 'active' : ''
     );
 };
 

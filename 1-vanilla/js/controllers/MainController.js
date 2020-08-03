@@ -1,17 +1,16 @@
 import FormView from '../views/FormView.js';
 import ResultView from '../views/ResultView.js';
 import TabView from '../views/TabView.js';
+import KeywordView from '../views/KeywordView.js';
 
 import SearchModel from "../models/SearchModel.js";
+import KeywordModel from "../models/KeywordModel.js";
+import HistoryModel from "../models/HistoryModel.js";
 
 const tag = '[Main contorller]';
 
 export default {
   init() {
-    this.renderView();
-  },
-
-  renderView() {
     const formEl = document.querySelector('form');
     FormView.setup(formEl)
         .on('@submit', (e) => this.onSubmit(e.detail.input))
@@ -24,14 +23,29 @@ export default {
     TabView.setup(tabEl)
         .on('@click', (e) => this.onTabRemove(e))
 
+    const KeywordListEl = document.querySelector('.list');
+    KeywordView.setup(KeywordListEl)
+
+    TabView.setActiveTab('추천 검색어');
+    this.renderView();
+  },
+
+  renderView() {
+    if (TabView.activeTab === '추천 검색어') {
+      const keywordResult = KeywordModel.list();
+      keywordResult.then(data => KeywordView.render(data));
+    } else {
+
+    }
+
   },
 
   onTabRemove(e) {
-
+    e.detail.target.closest('li').style.display = 'none';
   },
 
-  search (qry) {
-    const getSearch = SearchModel.list(qry);
+  search () {
+    const getSearch = SearchModel.list();
     getSearch.then(data => {
       this.searchResultRender(data)
     })
@@ -43,7 +57,7 @@ export default {
   onFormReset () {
     ResultView.hide();
   },
-  onSubmit (value) {
+  onSubmit () {
     this.search()
   },
 };
