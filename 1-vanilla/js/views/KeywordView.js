@@ -11,18 +11,30 @@ KeywordView.setup = function (el) {
 
 KeywordView.render = function (data) {
     this.el.innerHTML = this.getKeywordListHtml(data);
+    this.bindClickEvent();
 };
 
 KeywordView.getKeywordListHtml = function (data) {
     return data.reduce((html, val, i) => {
         html += `
-            <li>
+            <li data-keyword="${val.keyword}">
                 <span class="number">${i + 1}</span>
                 ${val.keyword}
             </li>
         ` ;
          return html;
     }, '');
+};
+
+KeywordView.bindClickEvent = function () {
+    Array.from(this.el.querySelectorAll('li')).forEach(li =>
+        li.addEventListener('click', e => this.clickKeyword(e))
+    )
+};
+
+KeywordView.clickKeyword = function (e) {
+    const { keyword } = e.target.dataset;
+    this.emit('@click', {input: keyword })
 };
 
 export default KeywordView;

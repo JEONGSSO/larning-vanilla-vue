@@ -25,10 +25,13 @@ export default {
 
     const KeywordListEl = document.querySelector('.list');
     KeywordView.setup(KeywordListEl)
+        .on('@click', e => this.searchKeyword(e));
 
     TabView.setActiveTab('추천 검색어');
     this.renderView();
   },
+
+
 
   renderView() {
     if (TabView.activeTab === '추천 검색어') {
@@ -37,15 +40,18 @@ export default {
     } else {
 
     }
-
+    TabView.show();
+    KeywordView.show();
   },
 
   onTabRemove(e) {
     e.detail.target.closest('li').style.display = 'none';
   },
 
-  search () {
-    const getSearch = SearchModel.list();
+  search (qry) {
+    this.searchSubmit();
+    FormView.setValue(qry);
+    const getSearch = SearchModel.list(qry);
     getSearch.then(data => {
       this.searchResultRender(data)
     })
@@ -56,8 +62,17 @@ export default {
   },
   onFormReset () {
     ResultView.hide();
+    this.renderView();
   },
-  onSubmit () {
-    this.search()
+  onSubmit (val) {
+    this.search(val)
+  },
+  searchKeyword(data) {
+    const { input } = data.detail;
+    this.search(input)
+  },
+  searchSubmit() {
+    TabView.hide();
+    KeywordView.hide();
   },
 };
