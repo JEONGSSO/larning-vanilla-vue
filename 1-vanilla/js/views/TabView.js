@@ -25,6 +25,7 @@ TabView.setActiveTab = function (tabName) {
     Array.from(this.el.querySelectorAll('li')).forEach(li =>
         li.className = li.innerHTML === tabName ? 'active' : ''
     );
+    this.emit('@change', {name: tabName});
 };
 
 TabView.removeItem = function (e) {
