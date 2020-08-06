@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>MVC with Vanilla.JS</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h2 class="container">검색</h2>
+    </header>
+    <div class="container">
+      <form v-on:submit="onSubmit">
+        <input type="text" v-model="query" placeholder="검색어">
+        <input type="reset" v-show="query.length" @click="onReset" class="btn-reset" value="X">
+      </form>
+      <ul class="tabs">
+        <li class="ad" @click="switchTab" :class="{ active : activeTab === 'ad'}">추천 검색어</li>
+        <li class="recent" @click="switchTab" :class="{ active : activeTab === 'recent'}">최근 검색어</li>
+      </ul>
+      <ul class="list" v-if="list.length">
+        <li v-for="item in list" :key="item.id">
+          <img :src="item.image" :alt="item.name" />
+          <span>{{item.name}}</span>
+        </li>
+      </ul>
+      <div v-else></div>
+      <ul class="list history"></ul>
+      <ul class="search-list"></ul>
+    </div>
+  </div>
+  <script src="https://unpkg.com/vue"></script>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
