@@ -24,12 +24,16 @@
             <li class="ad" @click="switchTab" :class="{ active : activeTab === 'ad'}">추천 검색어</li>
             <li class="recent" @click="switchTab" :class="{ active : activeTab === 'recent'}">최근 검색어</li>
           </ul>
-          <keyword
-
-          ></keyword>
-          <hisroty
-
-          ></hisroty>
+          <tab-list type="keyword" v-if="activeTab === 'ad'">
+            :list="keywordList"
+            :stab="activeTab"
+            :cs="clickSearch"
+          </tab-list>
+          <tab-list type="history" v-else>
+            :list="HistoryList"
+            :stab="activeTab"
+            :cs="clickSearch"
+          </tab-list>
         </div>
         <search-list
           :data="list"
@@ -59,20 +63,12 @@
   </ul>
 </template>
 
-<template id="keyword">
-  <ul class="list" v-show="activeTab === 'ad'">
-    <li v-for="(item, index) in keywordList" :key="index">
-      <span class="number"> {{index + 1}} </span>
+<template id="tablist">
+  <ul class="list">
+    <li v-for="(item, index) in itemList" :key="index">
+      <span v-show="stab === 'ad'" class="number"> {{index + 1}} </span>
       <span class="keyword" @click="clickSearch">{{item.keyword}}</span>
-    </li>
-  </ul>
-</template>
-
-<template id="history">
-  <ul class="list" v-show="activeTab === 'recent'">
-    <li v-for="(item, index) in historyList" :key="index">
-      <span class="keyword" @click="clickSearch">{{item.keyword}}</span>
-      <span class="date">{{item.date}}</span>
+      <span v-show="stab === 'recent'" class="date">{{item.date}}</span>
       <button class="btn-remove" @click="onRemove(index)"></button>
     </li>
   </ul>

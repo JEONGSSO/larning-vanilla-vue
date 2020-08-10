@@ -1,5 +1,5 @@
 export default {
-    template: '#keyword',
+    template: '#search-list',
     props: ['data', 'qry'],
     data() {
         return {

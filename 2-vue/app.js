@@ -4,16 +4,14 @@ import HistoryModel from './model/HistoryModel.js';
 
 import SearchForm from './components/SearchForm.js';
 import SearchList from './components/SearchList.js';
-import Keyword from './components/Keyword.js';
-import History from './components/History.js';
+import TabList from './components/TabList.js';
 
 new Vue({
     el: '#app',
     components: {
         SearchForm,
         SearchList,
-        Keyword,
-        History,
+        TabList
     },
     data: {
         query : '',
@@ -55,10 +53,10 @@ new Vue({
         },
         onKeyUp() {
             this.isSearch = false;
-        }
+        },
     },
-    mounted () {
-        KeywordModel.list().then(val => this.keywordList = val)
-        HistoryModel.list().then(val => this.historyList = val)
+    mounted() {
+        KeywordModel.list().then(val => this.keywordList = val);
+        HistoryModel.list().then(val => this.historyList = val);
     },
 });
