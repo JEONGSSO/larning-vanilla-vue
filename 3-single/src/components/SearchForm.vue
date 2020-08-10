@@ -1,30 +1,38 @@
 <template id="search-form">
     <form @submit.prevent="submit">
-        <input type="text" v-model="inputValue" @keyUp="keyUp" placeholder="검색어">
-        <input type="reset" v-show="inputValue" @click="reset" class="btn-reset" value="X">
+        <input type="text" v-model="value" @keyup="keyUp" placeholder="검색어" />
+        <input type="reset" v-show="value" @click="reset" class="btn-reset" value="X" />
     </form>
 </template>
 
 <script>
+
+import { eventBus } from "../main";
+
 export default {
-    props: ['value'],
+    props: ['onSubmit', 'onReset', 'onKeyUp'],
     data() {
         return {
-            inputValue: this.value,
+            value: '',
         }
     },
     methods: {
-        // submit() {
-        //     this.$emit('form-submit', this.inputValue);
-        // },
-        // reset() {
-        //     this.inputValue = '';
-        //     this.$emit('form-reset');
-        // },
-        // keyUp(e) {
-        //     if (e.target.value) return;
-        //     this.$emit('form-keyup');
-        // }
+        submit() {
+            const qry = this.value;
+            this.onSubmit(qry);
+        },
+        reset() {
+            this.onReset();
+        },
+        keyUp() {
+            if (this.value) return;
+            this.onKeyUp();
+        }
     },
+    created() {
+        eventBus.$on('@sync', val => {
+            this.value = val;
+        })
+    }
 }
 </script>

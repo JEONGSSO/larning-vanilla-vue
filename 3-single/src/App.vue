@@ -1,139 +1,95 @@
 <template>
-  <div id="app">
-    <SearchForm></SearchForm>
+  <div id="app" class="container">
+    <SearchForm
+      :onSubmit="onSubmit"
+      :onReset="onReset"
+      :onKeyUp="onKeyUp"
+    ></SearchForm>
+    <div class="tab_wrap" v-show="!isSearch">
+      <ul class="tabs">
+        <li class="ad" @click="switchTab" :class="{ active : activeTab === 'ad'}">추천 검색어</li>
+        <li class="recent" @click="switchTab" :class="{ active : activeTab === 'recent'}">최근 검색어</li>
+      </ul>
+      <TabList v-show="!isSearch"
+        :tab="activeTab"
+        :list="activeTab === 'ad' ? keywordList : historyList"
+        :cs="clickSearch"
+        :onRemove="onRemove"
+      ></TabList>
+    </div>
+    <SearchList v-show="isSearch"
+      :list="list"
+    ></SearchList>
   </div>
 </template>
 
 <script>
-import SearchForm from './components/SearchForm.vue'
-// import SearchList from './components/SearchList.vue'
-// import TabList from './components/TabList.vue'
+import SearchForm from './components/SearchForm'
+import SearchList from './components/SearchList'
+import TabList from './components/TabList'
+
+import SearchModel from "./model/SearchModel";
+import HistoryModel from "./model/HistoryModel";
+import KeywordModel from "./model/KeywordModel";
+
+import { eventBus } from "./main";
 
 export default {
   name: 'App',
   components: {
     SearchForm,
-  }
+    SearchList,
+    TabList,
+  },
+  data() {
+    return {
+      query : '',
+      list: [],
+      isSearch: false,
+      activeTab: 'ad',
+      keywordList: [],
+      historyList: [],
+    }
+  },
+  methods: {
+    onSubmit(qry) {
+      this.search(qry);
+      this.query = qry;
+      this.isSearch = true;
+    },
+    search(qry = this.query) {
+      SearchModel.list(qry).then(val => this.list = val)
+      HistoryModel.add(qry);
+      HistoryModel.list().then(val => this.historyList = val)
+    },
+    onRemove(index) {
+      const item = this.historyList[index];
+      HistoryModel.remove(item.keyword);
+      this.historyList.splice(index, 1);
+    },
+    switchTab({ target }) {
+      this.activeTab = target.classList[0];
+    },
+    clickSearch(e) {
+      this.query = e.target.innerText;
+      eventBus.$emit('@sync', this.query)
+      this.isSearch = true;
+      this.search();
+    },
+    onReset() {
+      this.query = '';
+      this.list = [];
+      this.isSearch = false;
+    },
+    onKeyUp() {
+      this.isSearch = false;
+    },
+  },
+  mounted() {
+    KeywordModel.list().then(val => this.keywordList = val);
+    HistoryModel.list().then(val => this.historyList = val);
+  },
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-body, ul {
-  margin: 0;
-  padding: 0 10px;
-}
-ul {
-  list-style: none;
-}
-img {
-  width: 100%;
-}
-
-.container {
-  margin: 0 15px 0 15px;
-}
-header {
-  border-bottom: 1px #ccc solid;
-  padding: 15px 0  15px 0;
-  text-align: center;
-}
-input[type=text] {
-  display: block;
-  box-sizing: border-box;
-  width: 100%;
-  margin: 15px 0 15px 0;
-  padding: 10px 15px;
-  font-size: 14px;
-  line-height: 1.5;
-  border: 1px solid #cccccc;
-
-}
-.content {
-  border: 1px solid #ccc;
-}
-ul.tabs {
-  display: flex;
-}
-.tabs li {
-  display: inline-block;
-  width: 50%;
-  padding: 15px;
-  text-align: center;
-  box-sizing: border-box;
-  border-bottom: 1px solid #ccc;
-  background-color: #eee;
-  color: #999;
-  cursor: pointer;
-}
-.tabs li.active {
-  background-color: #2ac1bc;
-  color: #fff;
-}
-.list li {
-  box-sizing: border-box;
-  display: block;
-  padding: 15px;
-  border-bottom: 1px solid #ccc;
-  position: relative;
-}
-.list li:last-child {
-  border-bottom: none;
-}
-.list li .number{
-  margin-right: 15px;
-  color: #ccc;
-}
-.list li .date{
-  position: absolute;
-  right: 50px;
-  top: 15px;
-  margin-right: 15px;
-  color: #ccc;
-}
-.list li .keyword{
-  cursor: pointer;
-}
-.list li .btn-remove{
-  position: absolute;
-  right: 0px;
-  top: 15px;
-  margin-right: 15px;
-}
-
-form {
-  position: relative;
-}
-.btn-reset,
-.btn-remove {
-  border-radius: 50%;
-  background-color: #ccc;
-  color: white;
-  border: none;
-  padding: 2px 5px;
-  cursor: pointer;
-}
-.btn-reset {
-  position: absolute;
-  top: 12px;
-  right: 10px;
-}
-.btn-reset::before,
-.btn-remove::before {
-  content: 'X'
-}
-
-.search-list img {
-  width: 30%;
-  height: 30%;
-}
-
-</style>
+<style src="@/assets/css/app.css"></style>
